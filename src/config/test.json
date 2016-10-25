@@ -5,6 +5,6 @@
     "name": "security-test"
   },
   "network" : {
-    "port": 30003
+    "port": 30005
   }
 }

@@ -5,6 +5,6 @@
     "name": "security-production"
   },
   "network" : {
-    "port": 20003
+    "port": 20005
   }
 }
