@@ -13,30 +13,20 @@ let trustedHostMiddleware = require('../middlewares/trusted-host');
 
 const API_PREFIX = '/api';
 
-function isUserDataValid(userData) {
-    return utils.isStringWithLength(userData.password) && utils.isEmail(userData.email);
-}
-
 module.exports = function (app) {
     app.post(API_PREFIX + '/signin', trustedHostMiddleware, function (request, response, next) {
-        let userData = _.pick(request.body, ['email', 'password']);
-
-        if (isUserDataValid(userData)) {
-            action.execute('requestToService', {
-                service: 'account',
-                method: 'POST',
-                url: '/isValidCredential',
-                data: {
-                    email: userData.email,
-                    password: userData.password
-                }
-            }).then(function () {
-                response.send();
-            }).catch(function (err) {
-                next(error.getHttpError(400, err.message));
-            });
-        } else {
-            error.getHttpError(400, 'Invalid email or password');
-        }
+        action.execute('requestToService', {
+            service: 'account',
+            method: 'POST',
+            url: '/validation/credential',
+            data: {
+                email: request.body.email,
+                password: request.body.password
+            }
+        }).then(function (user) {
+            response.send(user);
+        }).catch(function (err) {
+            next(error.getHttpError(400, err.message));
+        });
     });
 };
